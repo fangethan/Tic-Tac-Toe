@@ -1,25 +1,51 @@
-import logo from './logo.svg';
+import {StrictMode, useState} from "react";
+import {createRoot} from "react-dom/client";
 import './App.css';
 
-function App() {
+function Square({value, onSquareClick}){
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+  <button className="square" onClick={onSquareClick}>{value}</button>
   );
 }
 
-export default App;
+export default function Board(){
+  // first index is the current state
+  // second index is the function to let you update it
+  const [squares, setSquares] = useState(Array(9).fill(null));
+  const [xIsNext, setXIsNext] = useState(true);
+
+  function handleClick(index) {
+    const nextSquares = squares.slice();
+    if(xIsNext) {
+      nextSquares[index] = "X";
+    } else {
+      nextSquares[index] = "O";
+    }
+
+    setSquares(nextSquares)
+    setXIsNext(!xIsNext)
+  }
+
+  return (
+    // fragments are used ti let you group a list of children without adding extra nodes to the dom
+    <>
+      <div className="board-row">
+        {/* anrrow function is used to negate handleClick() from being called immediately */}
+        <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
+        <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
+        <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
+      </div>
+      <div className="board-row">
+        <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
+        <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
+        <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
+      </div>
+      <div className="board-row">
+        <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
+        <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
+        <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
+      </div>
+    </>
+  );
+}
